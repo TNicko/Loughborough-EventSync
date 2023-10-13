@@ -2,6 +2,7 @@
   "include": ["src/**/*.ts"],
   "compilerOptions": {
     "target": "es2016",
+    "outDir": "./dist",
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
