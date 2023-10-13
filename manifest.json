@@ -1,5 +1,10 @@
 {
-    "name": "Loughborough EventSync",
-    "version": "0.0.0",
-    "manifest_version": 3
+  "name": "Loughborough EventSync",
+  "version": "0.0.0",
+  "manifest_version": 3,
+  "description": "Download Loughborough Calender Events",
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": "src/assets/hello_icon.png"
+  }
 }
