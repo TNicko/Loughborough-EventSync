@@ -1,10 +1,16 @@
-
+import './App.css'
 
 function App() {
   return (
     <>
-      <div>
-        <h1>My Extension Popup</h1>
+      <div className="container">
+        <div className="header">
+          Loughborough<br/>Event Sync
+        </div>
+        <div className="subtext">
+          Export or Sync your events
+        </div>
+        <button className="download-btn">Download Calender iCal</button>
       </div>
     </>
   )
