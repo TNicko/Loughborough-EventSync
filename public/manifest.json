@@ -4,7 +4,7 @@
   "manifest_version": 3,
   "description": "Download Loughborough Calender Events",
   "action": {
-    "default_popup": "src/popup/index.html",
-    "default_icon": "src/assets/hello_icon.png"
+    "default_popup": "index.html",
+    "default_icon": "images/hello_icon.png"
   }
 }
