@@ -1,4 +1,4 @@
-import './App.css'
+import '../global.css'
 import browser from "webextension-polyfill"
 
 function App() {
@@ -6,13 +6,12 @@ function App() {
   const handleSubmit = async () => {
     try {
       const tabs = await browser.tabs.query({ active: true, currentWindow: true})
-      const currentTab = tabs[0];
-
-      if (currentTab && currentTab.url?.startsWith('https://lucas.lboro.ac.uk/its_apx/f?p=250')) {
-        console.log("already on url");
+      const activeTab = tabs[0]
+      console.log(activeTab.url)
+      if (activeTab.url && activeTab.url.startsWith('https://lucas.lboro.ac.uk/its_apx/f?p=250')) {
+        console.log("scraping...");
       } else {
-        await browser.tabs.create({url: 'https://lucas.lboro.ac.uk/its_apx/f?p=250'})
-        console.log("opened calender url");
+        console.log("Not currently on correct url!");
       }
     } catch (error) {
       console.error("Error accessing tabs: ", error);
