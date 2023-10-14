@@ -6,5 +6,9 @@
   "action": {
     "default_popup": "index.html",
     "default_icon": "images/hello_icon.png"
-  }
+  },
+  "background": {
+    "scripts": ["browser-polyfill.js", "background.js"]
+  },
+  "permissions": ["tabs"]
 }
