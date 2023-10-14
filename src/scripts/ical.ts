@@ -5,18 +5,18 @@ export function createICalObject(events: Event[]): string {
     for (let i = 0; i < events.length; i++) {
         eventsString += `${createEvent(events[i])}`;
     }
-    return `
+    const text = `
     BEGIN:VCALENDAR
     VERSION:2.0
     PRODID:-//czuhajster, tnicko//NONSGML loughborough-eventsync v0.1.0//EN
     ${eventsString}
-    END:VCALENDAR
-    `
+    END:VCALENDAR`
+    return trimLeadingWhitespace(text);
 }
 
 function createEvent(event: Event): string {
     const dtstamp = createICalDateTime();
-    return `
+    const text = `
     BEGIN:VEVENT
     UID:${createUID()}
     DTSTAMP:${dtstamp}
@@ -25,8 +25,8 @@ function createEvent(event: Event): string {
     SUMMARY:${event.summary}
     COMMENT:${event.comment}
     LOCATION:${event.location}
-    END:VEVENT
-    `
+    END:VEVENT`
+    return trimLeadingWhitespace(text);
 }
 
 function createUID(): string {
@@ -61,4 +61,8 @@ export function downloadFile(iCalObject: string, fileName: string = "loughboroug
     document.body.removeChild(link);
 
     URL.revokeObjectURL(url);
+}
+
+function trimLeadingWhitespace(text: string): string {
+    return text.split('\n').map(line => line.trim()).join('\n');
 }
