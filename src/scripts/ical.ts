@@ -1,6 +1,6 @@
 import { Event } from "../types";
 
-function createICalObject(events: Event[]): string {
+export function createICalObject(events: Event[]): string {
     let eventsString = ""
     for (let i = 0; i < events.length; i++) {
         eventsString += `${createEvent(events[i])}`;
