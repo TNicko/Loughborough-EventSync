@@ -38,6 +38,11 @@ function createUID(): string {
 
 function createICalDateTime(): string {
     const date = new Date();
+    const datetime = formatICalDateTime(date);
+    return datetime
+}
+
+function formatICalDateTime(date: Date): string {
     const datetime = date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
     return datetime
 }
