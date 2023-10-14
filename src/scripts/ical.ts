@@ -1,11 +1,15 @@
 import { Event } from "../types";
 
 function createICalObject(events: Event[]): string {
+    let eventsString = ""
+    for (let i = 0; i < events.length; i++) {
+        eventsString += `${createEvent(events[i])}`;
+    }
     return `
     BEGIN:VCALENDAR
     VERSION:2.0
     PRODID:-//czuhajster, tnicko//NONSGML loughborough-eventsync v0.1.0//EN
-    ${events}
+    ${eventsString}
     END:VCALENDAR
     `
 }
