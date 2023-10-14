@@ -1,3 +1,5 @@
+import { Event } from "../types";
+
 function createICalObject(events: string): string {
     return `
     BEGIN:VCALENDAR
@@ -8,7 +10,7 @@ function createICalObject(events: string): string {
     `
 }
 
-function createEvent(event: object): string {
+function createEvent(event: Event): string {
     const dtstamp = createICalDateTime();
     return `
     BEGIN:VEVENT
