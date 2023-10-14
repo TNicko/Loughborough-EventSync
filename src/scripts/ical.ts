@@ -1,6 +1,6 @@
 import { Event } from "../types";
 
-function createICalObject(events: string): string {
+function createICalObject(events: Event[]): string {
     return `
     BEGIN:VCALENDAR
     VERSION:2.0
