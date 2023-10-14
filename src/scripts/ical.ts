@@ -41,3 +41,19 @@ function createICalDateTime(): string {
     const datetime = date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
     return datetime
 }
+
+export function downloadFile(iCalObject: string, fileName: string = "loughborough-timetable.ics"): void {    
+    const contentType = "text/calendar";
+    const blob = new Blob([ iCalObject ], { type: contentType });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
