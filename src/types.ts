@@ -1,6 +1,6 @@
 export interface Event {
-    start: string;
-    end: string;
+    start: Date;
+    end: Date;
     summary: string;
     comment: string;
     location: string;
