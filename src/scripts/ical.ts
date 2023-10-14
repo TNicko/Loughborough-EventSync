@@ -20,8 +20,8 @@ function createEvent(event: Event): string {
     BEGIN:VEVENT
     UID:${createUID()}
     DTSTAMP:${dtstamp}
-    DTSTART:${event.start}
-    DTEND:${event.end}
+    DTSTART:${formatICalDateTime(event.start)}
+    DTEND:${formatICalDateTime(event.end)}
     SUMMARY:${event.summary}
     COMMENT:${event.comment}
     LOCATION:${event.location}
