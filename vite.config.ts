@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
-import copy from 'rollup-plugin-copy'
 
 export default defineConfig({
   root: resolve(__dirname, 'src'),
@@ -11,20 +10,11 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: resolve(__dirname, 'src/popup/index.html'),
-        background: resolve(__dirname, 'src/background.ts'),
       },
       output: {
-        entryFileNames: `[name].js`,
+        chunkFileNames: 'assets/chunk-[hash].js',
       },
     },
   },
-  plugins: [
-    copy({
-      targets: [
-        { src: resolve(__dirname, 'src/manifest.json'), dest: 'dist' },
-      ],
-      hook: 'writeBundle',
-    }),
-    react(),
-  ],
+  plugins: [react()],
 })

@@ -9,7 +9,19 @@ function App() {
       const activeTab = tabs[0]
       console.log(activeTab.url)
       if (activeTab.url && activeTab.url.startsWith('https://lucas.lboro.ac.uk/its_apx/f?p=250')) {
-        console.log("scraping...");
+        console.log("Scraping tab: ", activeTab.id);
+        
+        // Sending the message and waiting for a response
+        if (activeTab.id !== undefined) {
+          browser.tabs.sendMessage(activeTab.id, { command: "scrapePage" })
+            .then(response => {
+              console.log("Received response:", response);
+            })
+            .catch(reportError);
+        } else {
+          console.log("Tab is not fully initialised: ID undefined.")
+        }
+
       } else {
         console.log("Not currently on correct url!");
       }
