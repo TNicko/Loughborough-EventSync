@@ -9,6 +9,7 @@ const DAYS = [
 ]
 
 const HALF_HOUR = 30
+const HOUR = HALF_HOUR * 2
 
 const timetableData = []
 
@@ -17,10 +18,10 @@ function sleep(ms) {
 }
 
 /**
- * Parses a string representing weeks in which events occur.
+ * Parses a string representing weeks in which sessions occur.
  *
  * @param {string} weeksString - The string containing the weeks information.
- * @returns {number[]} An array of week numbers where the event occurs.
+ * @returns {number[]} An array of week numbers where the session occurs.
  *
  * @example
  * // Example input string:
@@ -65,9 +66,9 @@ function getRowDay(row) {
   return DAYS.indexOf(dayText)
 }
 
-// Function to parse event information from a table cell
-function parseEventFromCell(cell, day, lastTimeOffset, gapDuration) {
-  event_data = {
+// Function to parse session information from a table cell
+function parseSessionFromCell(cell, day, lastTimeOffset, gapDuration) {
+  session_data = {
     moduleId: $(cell).find('.tt_module_id_row').text(),
     moduleName: $(cell).find('.tt_module_name_row').text(),
     type: $(cell).find('.tt_modtype_row').text(),
@@ -81,15 +82,15 @@ function parseEventFromCell(cell, day, lastTimeOffset, gapDuration) {
     duration: parseInt($(cell).attr('colspan'), 10) * HALF_HOUR,
     weeks: parseWeeks($(cell).find('.tt_weeks_row').text()),
   }
-  return event_data
+  return session_data
 }
 
-// Function to extract events from a row
-function extractEventsFromRow(row) {
+// Function to extract sessions from a row
+function extractSessionsFromRow(row) {
   const day = getRowDay(row)
   let gapDuration = 0
   let lastTimeOffset = 0
-  let events = []
+  let sessions = []
 
   const cells = $(row).children('td').not('.weekday_col').get()
   cells.forEach((cell) => {
@@ -97,37 +98,42 @@ function extractEventsFromRow(row) {
       cell.classList.contains('new_row_tt_info_cell') ||
       cell.classList.contains('tt_ingo_cell')
     ) {
-      const event = parseEventFromCell(cell, day, lastTimeOffset, gapDuration)
+      const session = parseSessionFromCell(
+        cell,
+        day,
+        lastTimeOffset,
+        gapDuration,
+      )
 
       // Update the last time offset and reset the gap duration
-      lastTimeOffset += event.duration
+      lastTimeOffset += session.duration
       gapDuration = 0
 
-      events.push(event)
+      sessions.push(session)
     } else {
       gapDuration += HALF_HOUR
     }
   })
-  return events
+  return sessions
 }
 
-// Function to process all rows and extract all events
-function extractAllEvents(rows) {
-  let allEvents = []
+// Function to process all rows and extract all sessions
+function extractAllSessions(rows) {
+  let allSessions = []
 
-  // Iterate over each row to extract events
+  // Iterate over each row to extract sessions
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]
-    const rowEvents = extractEventsFromRow(row)
-    allEvents = allEvents.concat(rowEvents)
+    const rowSessions = extractSessionsFromRow(row)
+    allSessions = allSessions.concat(rowSessions)
   }
 
-  return allEvents
+  return allSessions
 }
 
 const rows = $('.tt_info_row').get()
-const events = extractAllEvents(rows)
-console.log(events)
+const sessions = extractAllSessions(rows)
+console.log(sessions)
 
 /** Extracts the value of each <option> in the dropdown with ID 'P2_MY_PERIOD'. */
 const optionValues = $('#P2_MY_PERIOD > option')
@@ -153,4 +159,24 @@ function selectSemesterAndLoad() {
   return sem_num
 }
 
-semester_num = selectSemesterAndLoad()
+semester = selectSemesterAndLoad()
+
+/** The beginning of the each week as a `Date` in the current semester. Array index equal to week number. */
+const weekStartDates = [
+  null,
+  ...$('#P2_MY_PERIOD > option')
+    .get()
+    .map((x) => x.innerText)
+    .filter((x) => x.includes(`Sem ${semester} - Wk`))
+    .map((x) =>
+      /^Sem \d - Wk \d{1,2} \(starting (\d{1,2}-[A-Z]{3}-\d{4})\)$/.exec(x),
+    )
+    .map((x) => new Date(x[1]).getTime()),
+]
+console.log(weekStartDates)
+
+/** The start of the days as a `Date` as displayed in the timetable (generally 9AM). */
+const timetableStart =
+  $('.first_time_slot_col').first().text().split(':')[0] * HOUR
+
+console.log(timetableStart)
