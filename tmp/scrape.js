@@ -128,3 +128,29 @@ function extractAllEvents(rows) {
 const rows = $('.tt_info_row').get()
 const events = extractAllEvents(rows)
 console.log(events)
+
+/** Extracts the value of each <option> in the dropdown with ID 'P2_MY_PERIOD'. */
+const optionValues = $('#P2_MY_PERIOD > option')
+  .get()
+  .map((x) => x.value)
+
+console.log(optionTexts)
+
+// Function to select 'sem1' or 'sem2' if they exist and load the related page
+function selectSemesterAndLoad() {
+  var $dropdown = $('#P2_MY_PERIOD')
+  var hasSem1 = $dropdown.find('option[value="sem1"]').length > 0
+  var hasSem2 = $dropdown.find('option[value="sem2"]').length > 0
+
+  if (hasSem1) {
+    $dropdown.val('sem1')
+    sem_num = 1
+  } else if (hasSem2) {
+    $dropdown.val('sem2')
+    sem_num = 2
+  }
+  $dropdown.change()
+  return sem_num
+}
+
+semester_num = selectSemesterAndLoad()
