@@ -8,14 +8,9 @@ const DAYS = [
   'Sunday',
 ]
 
-const HALF_HOUR = 30
+const HALF_HOUR = 30 * 60 * 1000
 const HOUR = HALF_HOUR * 2
-
-const timetableData = []
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
+const DAY = HOUR * 24
 
 /**
  * Parses a string representing weeks in which sessions occur.
@@ -67,7 +62,13 @@ function getRowDay(row) {
 }
 
 // Function to parse session information from a table cell
-function parseSessionFromCell(cell, day, lastTimeOffset, gapDuration) {
+function parseSessionFromCell(
+  cell,
+  day,
+  lastDuration,
+  lastTimeOffset,
+  gapDuration,
+) {
   session_data = {
     moduleId: $(cell).find('.tt_module_id_row').text(),
     moduleName: $(cell).find('.tt_module_name_row').text(),
@@ -78,7 +79,7 @@ function parseSessionFromCell(cell, day, lastTimeOffset, gapDuration) {
       .text()
       .replace(/\.\.\.|\(|\)/g, ''),
     day: day,
-    timeOffset: lastTimeOffset + gapDuration,
+    timeOffset: lastTimeOffset + lastDuration + gapDuration,
     duration: parseInt($(cell).attr('colspan'), 10) * HALF_HOUR,
     weeks: parseWeeks($(cell).find('.tt_weeks_row').text()),
   }
@@ -90,24 +91,28 @@ function extractSessionsFromRow(row) {
   const day = getRowDay(row)
   let gapDuration = 0
   let lastTimeOffset = 0
+  let lastDuration = 0
   let sessions = []
 
   const cells = $(row).children('td').not('.weekday_col').get()
   cells.forEach((cell) => {
     if (
       cell.classList.contains('new_row_tt_info_cell') ||
-      cell.classList.contains('tt_ingo_cell')
+      cell.classList.contains('tt_info_cell')
     ) {
       const session = parseSessionFromCell(
         cell,
         day,
+        lastDuration,
         lastTimeOffset,
         gapDuration,
       )
+      console.log(gapDuration, lastTimeOffset)
 
       // Update the last time offset and reset the gap duration
-      lastTimeOffset += session.duration
+      lastTimeOffset = session.timeOffset
       gapDuration = 0
+      lastDuration = session.duration
 
       sessions.push(session)
     } else {
@@ -131,16 +136,12 @@ function extractAllSessions(rows) {
   return allSessions
 }
 
-const rows = $('.tt_info_row').get()
-const sessions = extractAllSessions(rows)
-console.log(sessions)
-
 /** Extracts the value of each <option> in the dropdown with ID 'P2_MY_PERIOD'. */
-const optionValues = $('#P2_MY_PERIOD > option')
-  .get()
-  .map((x) => x.value)
+//const optionValues = $('#P2_MY_PERIOD > option')
+//.get()
+//.map((x) => x.value)
 
-console.log(optionTexts)
+//console.log(optionTexts)
 
 // Function to select 'sem1' or 'sem2' if they exist and load the related page
 function selectSemesterAndLoad() {
@@ -159,7 +160,36 @@ function selectSemesterAndLoad() {
   return sem_num
 }
 
-semester = selectSemesterAndLoad()
+function createEvents(sessions, weekStartDates, timetableStart) {
+  return sessions.reduce((events, session) => {
+    events.push(
+      ...session.weeks.map((weekNumber) => {
+        const startTime =
+          weekStartDates[weekNumber] +
+          DAY * session.day +
+          timetableStart +
+          session.timeOffset
+
+        return {
+          id: `${startTime}-${session.moduleId}`,
+          start: new Date(startTime),
+          end: new Date(startTime + session.duration),
+          summary: session.type
+            ? `${session.moduleName} (${session.type})`
+            : session.moduleName,
+          location: session.buildingName
+            ? `${session.room} (${session.buildingName})`
+            : session.room,
+          comment: `${session.type} for ${session.moduleName} (${session.moduleId}) with ${session.lecturerName} in room ${session.room} of ${session.buildingName}`,
+        }
+      }),
+    )
+
+    return events
+  }, [])
+}
+
+const semester = selectSemesterAndLoad()
 
 /** The beginning of the each week as a `Date` in the current semester. Array index equal to week number. */
 const weekStartDates = [
@@ -173,10 +203,12 @@ const weekStartDates = [
     )
     .map((x) => new Date(x[1]).getTime()),
 ]
-console.log(weekStartDates)
 
 /** The start of the days as a `Date` as displayed in the timetable (generally 9AM). */
 const timetableStart =
   $('.first_time_slot_col').first().text().split(':')[0] * HOUR
-
-console.log(timetableStart)
+const rows = $('.tt_info_row').get()
+const sessions = extractAllSessions(rows)
+const events = createEvents(sessions, weekStartDates, timetableStart)
+console.log(sessions)
+console.log(events)
