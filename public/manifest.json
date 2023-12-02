@@ -12,11 +12,5 @@
       "128": "images/hello_icon.png"
     }
   },
-  "permissions": ["tabs", "activeTab"],
-  "content_scripts": [
-    {
-      "js": ["content.js"],
-      "matches": ["http://*/*", "https://*/*"]
-    }
-  ]
+  "permissions": ["tabs", "activeTab"]
 }
