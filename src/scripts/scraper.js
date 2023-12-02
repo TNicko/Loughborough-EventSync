@@ -1,16 +1,4 @@
-async function executeScript() {
-  let [tab] = await chrome.tabs.query({ active: true })
-  console.log('sending message to ', tab)
-  chrome.scripting
-    .executeScript({
-      target: { tabId: tab.id },
-      func: getEvents,
-    })
-    .then((response) => {
-      console.log(response[0].result)
-    })
-}
-function getEvents() {
+export function getEvents() {
   const DAYS = [
     'Monday',
     'Tuesday',

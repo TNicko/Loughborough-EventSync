@@ -1,5 +1,5 @@
 import '../global.css'
-import browser from 'webextension-polyfill'
+import { getEvents } from '../scripts/scraper.js'
 
 function App() {
   const handleSubmit = async () => {
