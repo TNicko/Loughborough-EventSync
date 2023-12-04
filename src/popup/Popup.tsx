@@ -4,32 +4,27 @@ import { getEvents } from '../scripts/scraper.js'
 function App() {
   const handleSubmit = async () => {
     try {
-      const tabs = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      })
-      const activeTab = tabs[0]
-      console.log(activeTab.url)
-      if (
-        activeTab.url &&
-        activeTab.url.startsWith('https://lucas.lboro.ac.uk/its_apx/f?p=250')
-      ) {
-        console.log('Scraping tab: ', activeTab.id)
+      const [tab] = await chrome.tabs.query({ active: true })
 
-        // Sending the message and waiting for a response
-        if (activeTab.id !== undefined) {
-          browser.tabs
-            .sendMessage(activeTab.id, { action: 'runContentScript' })
-            .then((response) => {
-              console.log('Received response:', response)
-            })
-            .catch(reportError)
-        } else {
-          console.log('Tab is not fully initialised: ID undefined.')
-        }
-      } else {
+      if (!tab) {
+        console.log('No active tab found.')
+        return
+      }
+
+      console.log('>> Current tab: ', tab)
+
+      const correctUrl = 'https://lucas.lboro.ac.uk/its_apx/f?p=250'
+      if (!tab.url || !tab.url.startsWith(correctUrl)) {
         console.log('Not currently on correct url!')
       }
+
+      console.log('>> Scraping tab: ', tab.id)
+      const response = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: getEvents,
+      })
+
+      console.log(response[0]?.result ?? 'No response received.')
     } catch (error) {
       console.error('Error accessing tabs: ', error)
     }
