@@ -4,9 +4,11 @@ import { getEvents } from '../scripts/scraper.js'
 
 function App() {
   const [errorMessage, setErrorMessage] = useState('')
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const handleSubmit = async () => {
     setErrorMessage('')
+    setIsSuccess(false)
     try {
       const [tab] = await chrome.tabs.query({ active: true })
 
@@ -33,6 +35,8 @@ function App() {
           'No response received. Make sure you are on the correct page and that events exist on your calender.',
         )
       }
+
+      setIsSuccess(true)
 
       console.log(response[0]?.result ?? 'No response received.')
     } catch (error) {
@@ -66,9 +70,24 @@ function App() {
             iCal" button below.
           </li>
         </ol>
-        <button className='download-btn' onClick={handleSubmit}>
-          Download Calender iCal
-        </button>
+        {isSuccess ? (
+          <div id='loading'>
+            <span className='icon-line line-tip'></span>
+            <span className='icon-line line-long'></span>
+            <div className='outer-shadow'></div>
+            <div className='inner-shadow'></div>
+            <div className='hold left'>
+              <div className='fill'></div>
+            </div>
+            <div className='hold right'>
+              <div className='fill'></div>
+            </div>
+          </div>
+        ) : (
+          <button className='download-btn' onClick={handleSubmit}>
+            Download Calendar iCal
+          </button>
+        )}
         {errorMessage && <div className='error-message'>{errorMessage}</div>}
       </div>
     </>
