@@ -13,7 +13,7 @@ body {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  width: 250px;
+  width: 300px; /* Increased width for better layout of instructions */
 }
 
 .header {
@@ -30,6 +30,26 @@ body {
   color: #555;
 }
 
+.instructions {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #333;
+}
+
+.instructions li {
+  margin-bottom: 5px;
+}
+
+.instructions a {
+  color: #2c3e50;
+  text-decoration: none;
+}
+
+.instructions a:hover {
+  text-decoration: underline;
+}
+
 .download-btn {
   background-color: #2c3e50;
   color: white;
@@ -42,4 +62,17 @@ body {
 
 .download-btn:hover {
   background-color: #34495e;
+}
+
+.error-message {
+  color: #b00020; /* Red color for errors */
+  background-color: #ffebee; /* Light red background */
+  border: 1px solid #b00020; /* Red border */
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  box-sizing: border-box;
 }

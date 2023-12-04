@@ -1,32 +1,42 @@
 import '../global.css'
+import { useState } from 'react'
 import { getEvents } from '../scripts/scraper.js'
 
 function App() {
+  const [errorMessage, setErrorMessage] = useState('')
+
   const handleSubmit = async () => {
+    setErrorMessage('')
     try {
       const [tab] = await chrome.tabs.query({ active: true })
 
       if (!tab || !tab.id) {
-        console.log('No active tab found.')
+        setErrorMessage('No active tab found.')
         return
       }
-
-      console.log('>> Current tab: ', tab)
 
       const correctUrl = 'https://lucas.lboro.ac.uk/its_apx/f?p=250'
       if (!tab.url || !tab.url.startsWith(correctUrl)) {
-        console.log('Not currently on correct url!')
+        setErrorMessage(
+          'Please navigate to the Loughborough calendar page and try again.',
+        )
         return
       }
 
-      console.log('>> Scraping tab: ', tab.id)
       const response = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: getEvents,
       })
 
+      if (!response[0]?.result) {
+        setErrorMessage(
+          'No response received. Make sure you are on the correct page and that events exist on your calender.',
+        )
+      }
+
       console.log(response[0]?.result ?? 'No response received.')
     } catch (error) {
+      setErrorMessage(`There was an error accessing tabs`)
       console.error('Error accessing tabs: ', error)
     }
   }
@@ -40,9 +50,26 @@ function App() {
           Event Sync
         </div>
         <div className='subtext'>Export or Sync your events</div>
+        <ol className='instructions'>
+          <li>
+            Open your Loughborough calendar located at{' '}
+            <a
+              href='https://lucas.lboro.ac.uk/its_apx/f?p=250'
+              target='_blank'
+            >
+              https://lucas.lboro.ac.uk/its_apx/f?p=250
+            </a>
+          </li>
+          <li>Sign in and complete the authorization process.</li>
+          <li>
+            Once the calendar is open and visible, click the "Download Calendar
+            iCal" button below.
+          </li>
+        </ol>
         <button className='download-btn' onClick={handleSubmit}>
           Download Calender iCal
         </button>
+        {errorMessage && <div className='error-message'>{errorMessage}</div>}
       </div>
     </>
   )
