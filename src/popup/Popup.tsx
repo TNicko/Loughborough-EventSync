@@ -53,7 +53,7 @@ function App() {
           <br />
           Event Sync
         </div>
-        <div className='subtext'>Export or Sync your events</div>
+        <div className='subtext'>Export your events</div>
         <ol className='instructions'>
           <li>
             Open your Loughborough calendar located at{' '}
