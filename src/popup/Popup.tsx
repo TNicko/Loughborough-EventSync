@@ -6,7 +6,7 @@ function App() {
     try {
       const [tab] = await chrome.tabs.query({ active: true })
 
-      if (!tab) {
+      if (!tab || !tab.id) {
         console.log('No active tab found.')
         return
       }
@@ -16,6 +16,7 @@ function App() {
       const correctUrl = 'https://lucas.lboro.ac.uk/its_apx/f?p=250'
       if (!tab.url || !tab.url.startsWith(correctUrl)) {
         console.log('Not currently on correct url!')
+        return
       }
 
       console.log('>> Scraping tab: ', tab.id)
