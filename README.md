@@ -1,27 +1,16 @@
-# React + TypeScript + Vite
+# Loughborough EventSync Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Browser extension to download university timetable to integrate with personal calenders.
 
-Currently, two official plugins are available:
+- Designed for students and staff at Loughborough University.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
 
-## Expanding the ESLint configuration
+With this extension, users can download their semester 1 & semester 2 timetable
+from the Loughborough website as an iCal file, which can then be added to various
+personal calender systems.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Compatibility
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Built using Chrome-specific APIs, which means it is primarily compatible with Google Chrome.
+- May also work with other browsers that support Chrome APIs, but full functionality cannot be guaranteed outside of Google Chrome.
