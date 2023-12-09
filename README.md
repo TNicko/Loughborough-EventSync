@@ -25,13 +25,13 @@ personal calender systems.
 <h4>Step 1: Clone the Repository</h4>
 
 <pre><code>git clone https://github.com/TNicko/Loughborough-EventSync.git
-cd Loughborough-EventSync
 </code></pre>
 
 <h4>Step 2: Install Dependencies and Build</h4>
-<p>Navigate to the cloned directory and install the necessary dependencies:</p>
+<p>Navigate to the cloned directory, install dependencies and build:</p>
 
-<pre><code>npm install
+<pre><code>cd Loughborough-EventSync
+npm install
 npm run build 
 </code></pre>
 
