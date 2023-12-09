@@ -6,7 +6,7 @@ Browser extension to download university timetable to integrate with personal ca
 
 ## Overview
 
-With this extension, users can download their semester 1 & semester 2 timetable
+With this extension, users can download their semester 1 & 2 timetable
 from the Loughborough website as an iCal file, which can then be added to various
 personal calender systems.
 
