@@ -126,14 +126,14 @@ export function getEvents() {
     return sessions.reduce((events, session) => {
       session.weeks.forEach((weekNumber) => {
         const startTime =
-          weekStartDates[weekNumber] +
+          weekStartDates[weekNumber - 1] +
           DAY * session.day +
           timetableStart +
           session.timeOffset
         events.push({
-          id: `${startTime}-${session.moduleId}`,
-          start: new Date(startTime),
-          end: new Date(startTime + session.duration),
+          //id: `${startTime}-${session.moduleId}`,
+          start: new Date(startTime).toISOString(),
+          end: new Date(startTime + session.duration).toISOString(),
           summary: session.type
             ? `${session.moduleName} (${session.type})`
             : session.moduleName,
@@ -167,6 +167,5 @@ export function getEvents() {
   const rows = document.querySelectorAll('.tt_info_row')
   const sessions = extractAllSessions(rows)
   const events = createEvents(sessions, weekStartDates, timetableStart)
-
   return events
 }

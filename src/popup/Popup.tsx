@@ -1,6 +1,8 @@
 import '../global.css'
 import { useState } from 'react'
 import { getEvents } from '../scripts/scraper.js'
+import { downloadFile, createICalObject } from '../scripts/ical.js'
+import { Event, ScrapedEvent } from '../types'
 
 function App() {
   const [errorMessage, setErrorMessage] = useState('')
@@ -36,12 +38,18 @@ function App() {
         )
       }
 
+      const events: [Event] = response[0]?.result?.map(
+        (scraped_event: ScrapedEvent) => ({
+          ...scraped_event,
+          start: new Date(scraped_event.start),
+          end: new Date(scraped_event.end),
+        }),
+      )
+      const iCalObject = createICalObject(events)
+      downloadFile(iCalObject)
       setIsSuccess(true)
-
-      console.log(response[0]?.result ?? 'No response received.')
     } catch (error) {
       setErrorMessage(`There was an error accessing tabs`)
-      console.error('Error accessing tabs: ', error)
     }
   }
 
