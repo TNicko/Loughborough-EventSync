@@ -6,10 +6,10 @@
   "action": {
     "default_popup": "popup/index.html",
     "default_icon": {
-      "16": "images/hello_icon.png",
-      "32": "images/hello_icon.png",
-      "48": "images/hello_icon.png",
-      "128": "images/hello_icon.png"
+      "16": "images/extension_icon.png",
+      "32": "images/extension_icon.png",
+      "48": "images/extension_icon.png",
+      "128": "images/extension_icon.png"
     }
   },
   "permissions": ["tabs", "activeTab", "scripting"]
