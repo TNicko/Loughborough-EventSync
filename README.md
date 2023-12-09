@@ -1,4 +1,5 @@
-<h1><img align="center" height="50" src="public/images/extension_icon.png">Loughborough Timetable Extension</h1>
+<h1 style="display: flex; flex-direction: column;"><img align="center" height="50" src="public/images/extension_icon.png" style="margin:10px;">
+  Loughborough Timetable Extension</h1>
 
 Browser extension to download university timetable for integration with personal calenders.
 
