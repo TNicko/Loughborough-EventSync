@@ -1,4 +1,4 @@
-# Loughborough EventSync Extension
+# Loughborough Timetable Extension
 
 Browser extension to download university timetable for integration with personal calenders.
 
