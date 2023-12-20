@@ -57,27 +57,13 @@ function App() {
     <>
       <div className='container'>
         <div className='header'>
-          Loughborough
-          <br />
-          Event Sync
+          <img className='showcase-img' src={'/images/extension_icon.png'} />
+
+          <div className='title'>Loughborough Event Sync</div>
         </div>
-        <div className='subtext'>Export your events</div>
-        <ol className='instructions'>
-          <li>
-            Open your Loughborough calendar located at{' '}
-            <a
-              href='https://lucas.lboro.ac.uk/its_apx/f?p=250'
-              target='_blank'
-            >
-              https://lucas.lboro.ac.uk/its_apx/f?p=250
-            </a>
-          </li>
-          <li>Sign in and complete the authorization process.</li>
-          <li>
-            Once the calendar is open and visible, click the "Download Calendar
-            iCal" button below.
-          </li>
-        </ol>
+      </div>
+      <div className='line-br'></div>
+      <div className='container'>
         {isSuccess ? (
           <div id='loading'>
             <span className='icon-line line-tip'></span>
@@ -93,7 +79,7 @@ function App() {
           </div>
         ) : (
           <button className='download-btn' onClick={handleSubmit}>
-            Download Calendar iCal
+            Download Calendar
           </button>
         )}
         {errorMessage && <div className='error-message'>{errorMessage}</div>}
