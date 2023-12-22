@@ -92,7 +92,7 @@ body {
   text-decoration: underline;
 }
 
-.download-btn {
+.btn {
   background-color: var(--purple-tint);
   color: var(--purple);
   border: none;

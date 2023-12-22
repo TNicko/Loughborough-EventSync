@@ -1,5 +1,5 @@
 import '../global.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getEvents } from '../scripts/scraper.js'
 import { downloadFile, createICalObject } from '../scripts/ical.js'
 import { Event, ScrapedEvent } from '../types'
@@ -7,19 +7,33 @@ import { Event, ScrapedEvent } from '../types'
 function App() {
   const [errorMessage, setErrorMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
+  const [tab, setTab] = useState<chrome.tabs.Tab | null>(null)
+  const correctUrl = 'https://lucas.lboro.ac.uk/its_apx/f?p=250'
+
+  useEffect(() => {
+    const fetchTab = async () => {
+      const [currentTab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      })
+      setTab(currentTab)
+    }
+    fetchTab()
+  }, [])
+
+  const goToSubmit = () => {
+    chrome.tabs.create({ url: correctUrl })
+  }
 
   const handleSubmit = async () => {
     setErrorMessage('')
     setIsSuccess(false)
     try {
-      const [tab] = await chrome.tabs.query({ active: true })
-
       if (!tab || !tab.id) {
         setErrorMessage('No active tab found.')
         return
       }
 
-      const correctUrl = 'https://lucas.lboro.ac.uk/its_apx/f?p=250'
       if (!tab.url || !tab.url.startsWith(correctUrl)) {
         setErrorMessage(
           'Please navigate to the Loughborough calendar page and try again.',
@@ -77,8 +91,12 @@ function App() {
               <div className='fill'></div>
             </div>
           </div>
+        ) : tab && (!tab.url || !tab.url.startsWith(correctUrl)) ? (
+          <button className='btn goto-btn' onClick={goToSubmit}>
+            Go To Calender
+          </button>
         ) : (
-          <button className='download-btn' onClick={handleSubmit}>
+          <button className='btn download-btn' onClick={handleSubmit}>
             Download Calendar
           </button>
         )}
