@@ -111,12 +111,12 @@ export function getEvents() {
     const hasSem2 = dropdown.querySelector('option[value="sem2"]') !== null
     let sem_num = 0
 
-    if (hasSem1) {
-      dropdown.value = 'sem1'
-      sem_num = 1
-    } else if (hasSem2) {
+    if (hasSem2) {
       dropdown.value = 'sem2'
       sem_num = 2
+    } else if (hasSem1) {
+      dropdown.value = 'sem1'
+      sem_num = 1
     }
     dropdown.dispatchEvent(new Event('change'))
     return sem_num
