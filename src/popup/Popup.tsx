@@ -2,9 +2,10 @@ import '../global.css'
 import { useEffect, useState } from 'react'
 import { getEvents } from '../scripts/scraper.js'
 import { downloadFile, createICalObject } from '../scripts/ical.js'
-import { Event, ScrapedEvent } from '../types'
+import { Event, ScrapedEvent, EventResponse } from '../types'
 
 function App() {
+  const [semester, setSemester] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
   const [tab, setTab] = useState<chrome.tabs.Tab | null>(null)
@@ -28,6 +29,10 @@ function App() {
   const handleSubmit = async () => {
     setErrorMessage('')
     setIsSuccess(false)
+    if (!semester) {
+      setErrorMessage('Please select a semester.')
+      return
+    }
     try {
       if (!tab || !tab.id) {
         setErrorMessage('No active tab found.')
@@ -44,15 +49,22 @@ function App() {
       const response = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: getEvents,
+        args: [semester],
       })
+      const scriptResult: EventResponse = response[0].result
 
-      if (!response[0]?.result) {
+      if (scriptResult.error) {
+        setErrorMessage(scriptResult.error)
+        return
+      }
+      if (!scriptResult.events) {
         setErrorMessage(
           'No response received. Make sure you are on the correct page and that events exist on your calender.',
         )
+        return
       }
 
-      const events: [Event] = response[0]?.result?.map(
+      const events: Event[] = scriptResult.events.map(
         (scraped_event: ScrapedEvent) => ({
           ...scraped_event,
           start: new Date(scraped_event.start),
@@ -63,7 +75,7 @@ function App() {
       downloadFile(iCalObject)
       setIsSuccess(true)
     } catch (error) {
-      setErrorMessage(`There was an error accessing tabs`)
+      setErrorMessage(`An error occured. Please try again.`)
     }
   }
 
@@ -96,9 +108,21 @@ function App() {
             Go To Calender
           </button>
         ) : (
-          <button className='btn download-btn' onClick={handleSubmit}>
-            Download Calendar
-          </button>
+          <>
+            <select
+              className='dropdown'
+              value={semester}
+              onChange={(e) => setSemester(e.target.value)}
+            >
+              <option value=''>Select Semester</option>
+              <option value='sem1'>Semester 1</option>
+              <option value='sem2'>Semester 2</option>
+            </select>
+
+            <button className='btn download-btn' onClick={handleSubmit}>
+              Download Calendar
+            </button>
+          </>
         )}
         {errorMessage && <div className='error-message'>{errorMessage}</div>}
       </div>

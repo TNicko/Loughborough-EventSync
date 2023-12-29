@@ -13,3 +13,8 @@ export interface ScrapedEvent {
   comment: string
   location: string
 }
+
+export type EventResponse = {
+  events?: ScrapedEvent[]
+  error?: string
+}

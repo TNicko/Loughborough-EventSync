@@ -1,4 +1,4 @@
-export function getEvents() {
+export async function getEvents(semester) {
   const DAYS = [
     'Monday',
     'Tuesday',
@@ -105,21 +105,33 @@ export function getEvents() {
     return allSessions
   }
 
-  function selectSemesterAndLoad() {
-    const dropdown = document.getElementById('P2_MY_PERIOD')
-    const hasSem1 = dropdown.querySelector('option[value="sem1"]') !== null
-    const hasSem2 = dropdown.querySelector('option[value="sem2"]') !== null
-    let sem_num = 0
+  function selectSemesterAndLoad(semester) {
+    return new Promise((resolve, reject) => {
+      const dropdown = document.getElementById('P2_MY_PERIOD')
+      const semesterOptions = {
+        sem1: { value: 'sem1', num: 1 },
+        sem2: { value: 'sem2', num: 2 },
+      }
 
-    if (hasSem2) {
-      dropdown.value = 'sem2'
-      sem_num = 2
-    } else if (hasSem1) {
-      dropdown.value = 'sem1'
-      sem_num = 1
-    }
-    dropdown.dispatchEvent(new Event('change'))
-    return sem_num
+      const selectedOption = semesterOptions[semester]
+
+      if (
+        !selectedOption ||
+        dropdown.querySelector(`option[value="${selectedOption.value}"]`) ===
+          null
+      ) {
+        reject(`Option for '${semester}' does not exist.`)
+        return
+      }
+
+      dropdown.value = selectedOption.value
+      dropdown.dispatchEvent(new Event('change'))
+
+      // Set a timeout to wait for the page to process the change
+      setTimeout(() => {
+        resolve({ sem_num: selectedOption.num })
+      }, 1000)
+    })
   }
 
   function createEvents(sessions, weekStartDates, timetableStart) {
@@ -147,7 +159,12 @@ export function getEvents() {
     }, [])
   }
 
-  const semester = selectSemesterAndLoad()
+  const semesterResponse = await selectSemesterAndLoad(semester)
+
+  if (semesterResponse.error) {
+    return { error: semesterResponse.error }
+  }
+
   const weekStartDates = Array.from(
     document.getElementById('P2_MY_PERIOD').options,
   )
@@ -167,5 +184,5 @@ export function getEvents() {
   const rows = document.querySelectorAll('.tt_info_row')
   const sessions = extractAllSessions(rows)
   const events = createEvents(sessions, weekStartDates, timetableStart)
-  return events
+  return { events: events }
 }

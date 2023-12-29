@@ -119,6 +119,44 @@ body {
   box-sizing: border-box;
 }
 
+/* -- Dropdown -- */
+.dropdown {
+  background-color: var(--navy);
+  color: var(--lightest-slate);
+  border: 1px solid var(--slate);
+  padding: 5px 15px;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  margin: 10px 0;
+  margin-bottom: 20px;
+  cursor: pointer;
+  outline: none;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+
+  &:hover {
+    background-color: var(--dark-slate);
+    color: var(--white);
+  }
+
+  &:focus {
+    border-color: var(--white);
+  }
+}
+
+/* Style for options inside the dropdown */
+.dropdown option {
+  background-color: var(--light-navy);
+  color: var(--lightest-slate);
+}
+
+/* Fix for Chrome to remove default arrow */
+.dropdown::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
 /* --- Success CheckMark Animation --- */
 
 #loading {
