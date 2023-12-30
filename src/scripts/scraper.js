@@ -120,7 +120,9 @@ export async function getEvents(semester) {
         dropdown.querySelector(`option[value="${selectedOption.value}"]`) ===
           null
       ) {
-        reject(`Option for '${semester}' does not exist.`)
+        reject(
+          `Semester '${selectedOption.num}' is not available on the timetable at the moment`,
+        )
         return
       }
 
@@ -159,10 +161,14 @@ export async function getEvents(semester) {
     }, [])
   }
 
-  const semesterResponse = await selectSemesterAndLoad(semester)
-
-  if (semesterResponse.error) {
-    return { error: semesterResponse.error }
+  try {
+    const semesterResponse = await selectSemesterAndLoad(semester)
+  } catch (error) {
+    if (typeof error === 'string') {
+      return { error }
+    } else {
+      return { error: 'Could not find Semester schedule.' }
+    }
   }
 
   const weekStartDates = Array.from(

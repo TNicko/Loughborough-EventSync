@@ -52,7 +52,6 @@ function App() {
         args: [semester],
       })
       const scriptResult: EventResponse = response[0].result
-
       if (scriptResult.error) {
         setErrorMessage(scriptResult.error)
         return
