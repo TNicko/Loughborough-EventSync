@@ -15,12 +15,6 @@
   --c-error: rgb(246, 103, 101);
   --c-error-tint: rgba(246, 103, 101, 0.1);
 
-  --sunset-orange1-tint: rgba(255, 111, 75, 0.1);
-  --sunset-orange2-tint: rgba(253, 76, 85, 0.1);
-  --sunset-orange3-tint: rgba(225, 54, 97, 0.1);
-  --sunset-orange4-tint: rgba(193, 36, 107, 0.1);
-  --sunset-orange5-tint: rgba(161, 20, 119, 0.1);
-
   background-color: var(--navy);
   color: var(--slate);
 
@@ -32,6 +26,36 @@ body {
   margin: 0;
   padding: 0;
   width: 250px;
+}
+
+p {
+  margin: 0;
+}
+
+.instruction-text {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: var(--light-navy);
+  border-radius: 5px;
+  text-align: left;
+  color: var(--light-slate);
+}
+
+.instruction-step {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.step-number {
+  margin-right: 10px;
+  font-weight: bold;
+  color: var(--white);
+}
+
+.instruction-text strong {
+  color: var(--white); /* A color that stands out */
 }
 
 .container {

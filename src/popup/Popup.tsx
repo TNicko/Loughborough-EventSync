@@ -104,9 +104,24 @@ function App() {
             </div>
           </div>
         ) : tab && (!tab.url || !tab.url.startsWith(correctUrl)) ? (
-          <button className='btn goto-btn' onClick={goToSubmit}>
-            Go To Calender
-          </button>
+          <>
+            <div className='instruction-text'>
+              <div className='instruction-step'>
+                <span className='step-number'>1</span>
+                <p>Navigate to your timetable using the button below.</p>
+              </div>
+              <div className='instruction-step'>
+                <span className='step-number'>2</span>
+                <p>
+                  <strong>Re-open this extension</strong> once your timetable
+                  is open.
+                </p>
+              </div>
+            </div>
+            <button className='btn goto-btn' onClick={goToSubmit}>
+              Go To Calender
+            </button>
+          </>
         ) : (
           <>
             <select
