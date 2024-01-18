@@ -161,8 +161,9 @@ export async function getEvents(semester) {
     }, [])
   }
 
+  let semesterResponse
   try {
-    const semesterResponse = await selectSemesterAndLoad(semester)
+    semesterResponse = await selectSemesterAndLoad(semester)
   } catch (error) {
     if (typeof error === 'string') {
       return { error }
@@ -170,18 +171,23 @@ export async function getEvents(semester) {
       return { error: 'Could not find Semester schedule.' }
     }
   }
+  console.log(semesterResponse)
 
+  // Create array of start dates of each week for selected semester (1 or 2)
   const weekStartDates = Array.from(
     document.getElementById('P2_MY_PERIOD').options,
   )
-    .map((option) =>
-      option.innerText.match(
-        /^Sem \d - Wk \d{1,2} \(starting (\d{1,2}-[A-Z]{3}-\d{4})\)$/,
-      ),
-    )
+    .map((option) => {
+      // Adjust the regular expression to capture the semester number
+      const regexPattern = new RegExp(
+        `^Sem (${semesterResponse.sem_num}) - Wk \\d{1,2} \\(starting (\\d{1,2}-[A-Z]{3}-\\d{4})\\)$`,
+      )
+      return option.innerText.match(regexPattern)
+    })
     .filter((x) => x)
-    .map((x) => new Date(x[1]).getTime())
+    .map((x) => new Date(x[2]).getTime())
 
+  console.log(weekStartDates)
   const timetableStart =
     parseInt(
       document.querySelector('.first_time_slot_col').textContent.split(':')[0],
