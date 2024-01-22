@@ -48,6 +48,7 @@ export async function getEvents(semester) {
     lastTimeOffset,
     gapDuration,
   ) {
+    const colspan = parseInt(cell.getAttribute('colspan'), 10)
     const session_data = {
       moduleId: cell.querySelector('.tt_module_id_row').textContent,
       moduleName: cell.querySelector('.tt_module_name_row').textContent,
@@ -59,7 +60,8 @@ export async function getEvents(semester) {
         .textContent.replace(/\.\.\.|\(|\)/g, ''),
       day: day,
       timeOffset: lastTimeOffset + lastDuration + gapDuration,
-      duration: parseInt(cell.getAttribute('colspan'), 10) * HALF_HOUR,
+      colspan: colspan,
+      duration: colspan * HALF_HOUR,
       weeks: parseWeeks(cell.querySelector('.tt_weeks_row').textContent),
     }
     return session_data
@@ -72,7 +74,7 @@ export async function getEvents(semester) {
     let lastDuration = 0
     let sessions = []
 
-    const cells = row.querySelectorAll('td:not(.weekday_col)')
+    const cells = row.querySelectorAll(':scope > td:not(.weekday_col)')
     cells.forEach((cell) => {
       if (
         cell.classList.contains('new_row_tt_info_cell') ||
@@ -144,6 +146,7 @@ export async function getEvents(semester) {
           DAY * session.day +
           timetableStart +
           session.timeOffset
+
         events.push({
           //id: `${startTime}-${session.moduleId}`,
           start: new Date(startTime).toISOString(),
@@ -171,7 +174,6 @@ export async function getEvents(semester) {
       return { error: 'Could not find Semester schedule.' }
     }
   }
-  console.log(semesterResponse)
 
   // Create array of start dates of each week for selected semester (1 or 2)
   const weekStartDates = Array.from(
@@ -187,12 +189,12 @@ export async function getEvents(semester) {
     .filter((x) => x)
     .map((x) => new Date(x[2]).getTime())
 
-  console.log(weekStartDates)
   const timetableStart =
     parseInt(
       document.querySelector('.first_time_slot_col').textContent.split(':')[0],
       10,
     ) * HOUR
+
   const rows = document.querySelectorAll('.tt_info_row')
   const sessions = extractAllSessions(rows)
   const events = createEvents(sessions, weekStartDates, timetableStart)
